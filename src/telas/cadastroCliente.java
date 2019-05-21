@@ -6,18 +6,22 @@
 package telas;
 
 import conexaobd.bd;
+import conexaobd.MostrarTabela;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 public class cadastroCliente extends javax.swing.JFrame {
 
     bd conexao = new bd();
+    private String Pesquisa;
     
     
     public cadastroCliente() {
         initComponents();
-        del.setEnabled(false);
+        conexao.conecta();
         preencherTabela("SELECT * FROM cliente ORDER BY id_cliente");
     }
 
@@ -55,14 +59,14 @@ public class cadastroCliente extends javax.swing.JFrame {
         pesquisa = new javax.swing.JTextField();
         pesquisar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableList = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SHOP");
         setBackground(new java.awt.Color(153, 153, 153));
-        setMaximumSize(new java.awt.Dimension(800, 600));
-        setMinimumSize(new java.awt.Dimension(800, 600));
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setMaximumSize(new java.awt.Dimension(800, 850));
+        setMinimumSize(new java.awt.Dimension(800, 850));
+        setPreferredSize(new java.awt.Dimension(800, 850));
         getContentPane().setLayout(null);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro de Clientes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 18))); // NOI18N
@@ -179,6 +183,7 @@ public class cadastroCliente extends javax.swing.JFrame {
 
         del.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         del.setText("Excluir");
+        del.setEnabled(false);
         del.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 delActionPerformed(evt);
@@ -218,7 +223,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(30, 10, 740, 510);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -229,10 +234,10 @@ public class cadastroCliente extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableList);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(40, 550, 720, 403);
+        jScrollPane1.setBounds(160, 560, 460, 240);
 
         pack();
         setLocationRelativeTo(null);
@@ -325,9 +330,37 @@ public class cadastroCliente extends javax.swing.JFrame {
             cep.setText("");
             uf.setText("");
         }
-       // conexao.desconecta();
+       conexao.desconecta();
     }//GEN-LAST:event_delActionPerformed
-
+    
+    public void preencherTabela(String Sql) {
+        ArrayList dados = new ArrayList();
+        String [] colunas = new String[]{"id_cliente","nome","municipio"};
+        conexao.conecta();
+        conexao.executaSQL(Sql);
+        
+        try{
+            conexao.rs.first();
+            
+            do{
+                dados.add(new Object[]{conexao.rs.getString("id_cliente"), conexao.rs.getString("nome"), conexao.rs.getString("municipio")});
+            }while(conexao.rs.next());
+        }catch(SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao preencher o ARRAYLIST"+ex);
+        }
+        
+        MostrarTabela tabela = new MostrarTabela(dados, colunas);
+        tableList.setModel(tabela);
+        tableList.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tableList.getColumnModel().getColumn(0).setResizable(false);
+        tableList.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tableList.getColumnModel().getColumn(1).setResizable(false);
+        tableList.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tableList.getColumnModel().getColumn(2).setResizable(false);
+        tableList.setAutoResizeMode(tableList.AUTO_RESIZE_OFF);
+        tableList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        conexao.desconecta();
+    }
     /**
      * @param args the command line arguments
      */
@@ -383,33 +416,15 @@ public class cadastroCliente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField municipio;
     private javax.swing.JTextField nome;
     private javax.swing.JTextField num;
     private javax.swing.JTextField pesquisa;
     private javax.swing.JButton pesquisar;
+    private javax.swing.JTable tableList;
     private javax.swing.JTextField uf;
     // End of variables declaration//GEN-END:variables
 
-    private void preencherTabela(String Sql) {
-        ArrayList dados = new ArrayList();
-        String [] = columns = new String[]{"parametros"};
-        conexao.conecta();
-        conexao.executaSQL(Sql);
-        
-        try{
-            conexao.rs.first();
-            do{
-                dados.add(new object [] {conexao.rs.getString("parametros")});
-            }while(conexao.rs.next());
-            }
-        }catch(SQLException ex){
-            JOptionPane.showMessageDialog("ERRO");
-        }
-        MostrarTabela tabela = new MostrarTabela(dados,colunas);
-        
-        
-        
-    }
 }
+    
+
