@@ -18,7 +18,7 @@ public class bd {
     private final String database = "store";
     private final String url = "jdbc:mysql://127.0.0.1:3306/store";
     private final String username = "root";
-    private final String password = "1234";
+    private final String password = "";
     public Statement stm;
     public ResultSet rs;
     public Connection conex = null;

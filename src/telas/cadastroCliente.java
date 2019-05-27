@@ -75,12 +75,12 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel1.setText("Nome");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(30, 60, 60, 22);
+        jLabel1.setBounds(30, 60, 60, 26);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel2.setText("Idade");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(390, 60, 60, 22);
+        jLabel2.setBounds(390, 60, 60, 26);
 
         nome.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         nome.setPreferredSize(new java.awt.Dimension(92, 30));
@@ -100,7 +100,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel3.setText("Endereço");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(30, 100, 80, 22);
+        jLabel3.setBounds(30, 100, 80, 26);
 
         end.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         end.setPreferredSize(new java.awt.Dimension(92, 30));
@@ -110,7 +110,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel4.setText("Nº");
         jPanel1.add(jLabel4);
-        jLabel4.setBounds(390, 100, 34, 22);
+        jLabel4.setBounds(390, 100, 34, 26);
 
         num.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         num.setPreferredSize(new java.awt.Dimension(92, 30));
@@ -120,7 +120,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel5.setText("Bairro");
         jPanel1.add(jLabel5);
-        jLabel5.setBounds(30, 150, 50, 22);
+        jLabel5.setBounds(30, 150, 50, 26);
 
         bairro.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         bairro.setPreferredSize(new java.awt.Dimension(92, 30));
@@ -130,7 +130,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel6.setText("CEP");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(390, 150, 37, 22);
+        jLabel6.setBounds(390, 150, 32, 26);
 
         cep.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         cep.setPreferredSize(new java.awt.Dimension(92, 30));
@@ -160,7 +160,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel8.setText("UF");
         jPanel1.add(jLabel8);
-        jLabel8.setBounds(390, 190, 34, 22);
+        jLabel8.setBounds(390, 190, 34, 26);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setLayout(null);
@@ -178,6 +178,11 @@ public class cadastroCliente extends javax.swing.JFrame {
         edit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         edit.setText("Editar");
         edit.setEnabled(false);
+        edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editActionPerformed(evt);
+            }
+        });
         jPanel2.add(edit);
         edit.setBounds(290, 40, 150, 25);
 
@@ -198,7 +203,7 @@ public class cadastroCliente extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel9.setText("ID");
         jPanel1.add(jLabel9);
-        jLabel9.setBounds(40, 420, 20, 22);
+        jLabel9.setBounds(40, 420, 20, 26);
 
         pesquisa.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         pesquisa.setPreferredSize(new java.awt.Dimension(92, 30));
@@ -332,6 +337,35 @@ public class cadastroCliente extends javax.swing.JFrame {
         }
        conexao.desconecta();
     }//GEN-LAST:event_delActionPerformed
+
+    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
+        conexao.conecta();
+        try{
+            PreparedStatement pst = conexao.conex.prepareStatement("UPDATE cliente SET nome=?, endereco=?, bairro=?, municipio=?, idade=?, num=?, cep=?, uf=?  WHERE id_cliente=?");
+            pst.setString(9, pesquisa.getText());
+            pst.setString(1, nome.getText());
+            pst.setString(2, end.getText());
+            pst.setString(3, bairro.getText());
+            pst.setString(4, municipio.getText());
+            pst.setString(5, idade.getText());
+            pst.setString(6, num.getText());
+            pst.setString(7, cep.getText());
+            pst.setString(8, uf.getText());
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Atualização efetuado com sucesso!");
+            nome.setText("");
+            end.setText("");
+            bairro.setText("");
+            municipio.setText("");
+            idade.setText("");
+            num.setText("");
+            cep.setText("");
+            uf.setText("");
+        }catch (SQLException ex){
+            JOptionPane.showMessageDialog(null, "Erro! Atualização não efetuado."+ex.toString());
+        }
+        conexao.desconecta();
+    }//GEN-LAST:event_editActionPerformed
     
     public void preencherTabela(String Sql) {
         ArrayList dados = new ArrayList();
